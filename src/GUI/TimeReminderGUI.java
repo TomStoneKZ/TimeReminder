@@ -8,10 +8,12 @@ import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
-public class TimeRemindGUI{
+public class TimeReminderGUI{
+	DesktopOccupy desktopOccupy;
 	
-	public TimeRemindGUI() {
+	public TimeReminderGUI() {
 		final JFrame frame = new JFrame("时间提醒");
 		JButton startButton = new JButton("开始计时");
 		startButton.setBounds(new Rectangle(50, 50, 50, 50));
@@ -30,7 +32,12 @@ public class TimeRemindGUI{
 	}
 	
 	public static void main(String[] args) {
-		new TimeRemindGUI();
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			public void run() {
+				new TimeReminderGUI();
+			}
+		});
 	}
 	
 	public void timeCount() {
@@ -38,8 +45,17 @@ public class TimeRemindGUI{
 		timer.schedule(new TimerTask() {
 			
 			public void run() {
-				System.out.println("a");
-				new DesktopOccupy();
+				SwingUtilities.invokeLater(new Runnable() {
+					
+					public void run() {
+						if(desktopOccupy == null) {
+							System.out.println("a");
+							desktopOccupy = new DesktopOccupy();
+						}
+						desktopOccupy.setVisible(true);
+						desktopOccupy.startCount();
+					}
+				});
 			}
 		}, 45*60*1000, 50*60*1000);
 	}
