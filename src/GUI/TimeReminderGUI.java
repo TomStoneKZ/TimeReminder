@@ -49,7 +49,6 @@ public class TimeReminderGUI{
 					
 					public void run() {
 						if(desktopOccupy == null) {
-							System.out.println("a");
 							desktopOccupy = new DesktopOccupy();
 						}
 						desktopOccupy.setVisible(true);

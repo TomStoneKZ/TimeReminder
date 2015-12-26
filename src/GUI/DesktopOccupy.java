@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,12 +17,11 @@ import javax.swing.SwingUtilities;
 public class DesktopOccupy extends JFrame{
 	
 	private static final long serialVersionUID = 2456477465891685954L;
-	private long targetTime;
-	private long currentTime;
 	private long distTime;
 	private long minutes, seconds;
 	private Timer timer = new Timer();
 	private JLabel label;
+	private static Random random = new Random();
 	
 	public DesktopOccupy() {
 		this.setUndecorated(true);
@@ -31,6 +31,7 @@ public class DesktopOccupy extends JFrame{
 		label.setFont(new Font("Dialog", 1, 24));
 		label.setForeground(Color.BLUE);
 		label.setHorizontalTextPosition(JLabel.CENTER);
+		label.setOpaque(false);
 		this.add(label);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(0);
@@ -90,24 +91,23 @@ public class DesktopOccupy extends JFrame{
 	}
 	
 	public void startCount() {
-		currentTime = System.currentTimeMillis();
-		targetTime = currentTime + 5*60*1000;
+		distTime = 5*60;
 		timer.schedule(new TimerTask() {
 			
 			public void run() {
-				currentTime = System.currentTimeMillis();
-				distTime = targetTime - currentTime;
 				if(distTime < 0) {
 					this.cancel();
 					timer.purge();
 					DesktopOccupy.this.dispose();
 				}
-				minutes = distTime/1000/60;
-				seconds = distTime/1000%60;
+				minutes = distTime/60;
+				seconds = distTime%60;
+				distTime--;
 				SwingUtilities.invokeLater(new Runnable() {
 					
 					public void run() {
 						label.setText("还剩 " + minutes + " 分 " + seconds + " 秒， 出去走走");
+						DesktopOccupy.this.getContentPane().setBackground(new Color((random.nextInt(0xFFFFFF))));
 					}
 				});
 			}
